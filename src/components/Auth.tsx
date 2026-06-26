@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Mail, Lock, ArrowRight, Loader2, KeyRound, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
 type AuthView = 'login' | 'register' | 'otp' | 'forgot' | 'reset';
 
 export default function Auth() {
+    const navigate = useNavigate();
     const [view, setView] = useState<AuthView>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -57,13 +59,13 @@ export default function Auth() {
         setLoading(true); setError(''); setMessage('');
         try {
             const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
-            
+
             // 1. Save the token
             localStorage.setItem('token', response.data.token);
-            
+
             // 2. Hard redirect to dashboard
             window.location.href = '/dashboard';
-            
+
         } catch (err: any) {
             setError(err.response?.data?.error || 'Invalid credentials or unverified email.');
         } finally { setLoading(false); }
@@ -117,7 +119,7 @@ export default function Auth() {
                 const res = await axios.post('http://localhost:3000/api/auth/google', {
                     accessToken: tokenResponse.access_token,
                 });
-                
+
                 localStorage.setItem('token', res.data.token);
                 window.location.href = '/dashboard';
             } catch (error) {
@@ -157,7 +159,7 @@ export default function Auth() {
                     {view === 'login' && (
                         <div className="space-y-5">
                             {/* THE NEW GOOGLE BUTTON */}
-                            <button 
+                            <button
                                 type="button"
                                 onClick={() => loginWithGoogle()}
                                 className="w-full bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-2.5 px-4 rounded-lg flex items-center justify-center transition-colors shadow-sm"
