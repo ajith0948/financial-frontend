@@ -1,14 +1,11 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { Mail, Lock, ArrowRight, Loader2, KeyRound, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
 type AuthView = 'login' | 'register' | 'otp' | 'forgot' | 'reset';
 
 export default function Auth() {
-    const navigate = useNavigate();
-
     const [view, setView] = useState<AuthView>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
