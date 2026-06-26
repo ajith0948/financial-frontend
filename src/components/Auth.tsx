@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import axios from 'axios';
 import { Mail, Lock, ArrowRight, Loader2, KeyRound, ShieldCheck, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useGoogleLogin } from '@react-oauth/google';
 
@@ -33,7 +33,7 @@ export default function Auth() {
         }
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/register', { email, password });
+            const response = await api.post('/api/auth/register', { email, password });
             setMessage(response.data.message || 'OTP sent to your email!');
             setView('otp');
         } catch (err: any) {
@@ -45,7 +45,7 @@ export default function Auth() {
         e.preventDefault();
         setLoading(true); setError(''); setMessage('');
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/verify-otp', { email, otp: otpCode });
+            const response = await api.post('/api/auth/verify-otp', { email, otp: otpCode });
             setMessage(response.data.message || 'Verified! You can now log in.');
             setOtpCode(''); setPassword('');
             setView('login');
@@ -58,7 +58,7 @@ export default function Auth() {
         e.preventDefault();
         setLoading(true); setError(''); setMessage('');
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/login', { email, password });
+            const response = await api.post('/api/auth/login', { email, password });
 
             // 1. Save the token
             localStorage.setItem('token', response.data.token);
@@ -75,7 +75,7 @@ export default function Auth() {
         e.preventDefault();
         setLoading(true); setError(''); setMessage('');
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/forgot-password', { email });
+            const response = await api.post('/api/auth/forgot-password', { email });
             setMessage(response.data.message);
             setView('reset');
         } catch (err: any) {
@@ -92,7 +92,7 @@ export default function Auth() {
         }
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:3000/api/auth/reset-password', {
+            const response = await api.post('/api/auth/reset-password', {
                 email,
                 resetCode: otpCode,
                 newPassword: password
@@ -116,7 +116,7 @@ export default function Auth() {
         onSuccess: async (tokenResponse) => {
             setLoading(true);
             try {
-                const res = await axios.post('http://localhost:3000/api/auth/google', {
+                const res = await api.post('/api/auth/google', {
                     accessToken: tokenResponse.access_token,
                 });
 

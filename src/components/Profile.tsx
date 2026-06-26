@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { ArrowLeft, Key, Mail, Save, Trash2, ShieldCheck, AlertCircle, Loader2, Activity, Moon, Sun } from 'lucide-react';
 import { useTheme } from '../context/ThemeProvider';
 
@@ -22,7 +22,7 @@ export default function Profile() {
         setLoading(true);
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:3000/api/users/profile', {
+            const response = await api.get('/api/users/profile', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setEmail(response.data.email);
@@ -59,7 +59,7 @@ export default function Profile() {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.post('http://localhost:3000/api/users/profile/apikey', 
+            const response = await api.post('/api/users/profile/apikey', 
                 { apiKey: apiKeyInput }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -84,7 +84,7 @@ export default function Profile() {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.post('http://localhost:3000/api/users/profile/apikey', 
+            const response = await api.post('/api/users/profile/apikey', 
                 { apiKey: '' }, 
                 { headers: { Authorization: `Bearer ${token}` } }
             );

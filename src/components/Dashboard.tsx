@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../api';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend, BarChart, Bar, XAxis, YAxis, CartesianGrid, AreaChart, Area } from 'recharts';
 import { 
     LogOut, FileText, Activity, UploadCloud, Loader2, IndianRupee, 
@@ -38,7 +38,7 @@ export default function Dashboard() {
         setRefreshing(true);
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:3000/api/statements', {
+            const response = await api.get('/api/statements', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatements(response.data);
@@ -57,7 +57,7 @@ export default function Dashboard() {
     const fetchFolders = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:3000/api/folders', {
+            const response = await api.get('/api/folders', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setFolders(response.data);
@@ -91,7 +91,7 @@ export default function Dashboard() {
 
         const token = localStorage.getItem('token');
         try {
-            await axios.post('http://localhost:3000/api/folders', 
+            await api.post('/api/folders', 
                 { name: newFolderName, color: newFolderColor },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
@@ -111,7 +111,7 @@ export default function Dashboard() {
 
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:3000/api/folders/${id}`, {
+            await api.delete(`/api/folders/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             if (selectedFolderId === id) {
@@ -127,7 +127,7 @@ export default function Dashboard() {
     const handleDelete = async (id: string) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:3000/api/statements/${id}`, {
+            await api.delete(`/api/statements/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setStatements(prev => prev.filter(doc => doc._id !== id));
@@ -182,7 +182,7 @@ export default function Dashboard() {
                     formData.append('folderId', scannerFolderId);
                 }
                 
-                return axios.post('http://localhost:3000/api/upload', formData, {
+                return api.post('/api/upload', formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                         Authorization: `Bearer ${token}`
